@@ -1,0 +1,26 @@
+{
+  "name": "StudyTime_Dev",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "./docker-compose.override.yml"
+  ],
+  "service": "develop",
+  "workspaceFolder": "/workspace",
+
+  "customizations": {
+
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/zsh"
+      },
+
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "mongodb.mongodb-vscode"
+      ]
+      
+    }
+  }
+}
