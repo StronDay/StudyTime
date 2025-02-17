@@ -18,7 +18,10 @@
         "ms-python.python",
         "ms-python.vscode-pylance",
         "ms-azuretools.vscode-docker",
-        "mongodb.mongodb-vscode"
+        "mongodb.mongodb-vscode",
+        "vue.volar",
+        "octref.vetur",
+        "esbenp.prettier-vscode"
       ]
       
     }

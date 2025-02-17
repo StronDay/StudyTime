@@ -26,11 +26,15 @@ RUN mkdir -p /home/app
 RUN addgroup --system app && adduser --system --group app
 
 ENV APP_HOME=/home/app
-RUN mkdir $APP_HOME/static
-RUN mkdir $APP_HOME/migrations
-RUN mkdir $APP_HOME/tests
-RUN mkdir $APP_HOME/locale
+# RUN mkdir $APP_HOME/static
+# RUN mkdir $APP_HOME/migrations
+# RUN mkdir $APP_HOME/tests
+# RUN mkdir $APP_HOME/locale
 WORKDIR $APP_HOME
+
+COPY ./.docker/app/entrypoint.sh /home/
+RUN sed -i 's/\r$//g'  /home/entrypoint.sh
+RUN chmod +x  /home/entrypoint.sh
 
 # COPY ./migrations/ $APP_HOME/migrations
 # COPY ./tests/ $APP_HOME/tests
@@ -42,14 +46,8 @@ COPY --from=builder /usr/src/app/wheels /wheels
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
-COPY ./.docker/app/entrypoint.sh .
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
-RUN chmod +x  $APP_HOME/entrypoint.sh
-
-COPY ./app/ $APP_HOME
+# COPY ./app/ $APP_HOME
 RUN chown -R app:app $APP_HOME
 USER app
 
-ENTRYPOINT ["/home/app/entrypoint.sh"]
-
-
+ENTRYPOINT ["../entrypoint.sh"]

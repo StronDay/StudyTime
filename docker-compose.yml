@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: ./.docker/app/Dockerfile
     volumes:
-      - ./app/:/app/
+      - ./app/:/home/app/
     ports:
       - 5010:5010
     command: uvicorn config.asgi:application --host 0.0.0.0 --port 5010 --workers 3
@@ -18,3 +18,17 @@ services:
       - .env
     networks:
       - app_network
+    tty: true
+
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./.docker/web/Dockerfile
+    volumes:
+      - ./web:/home/web
+    ports:
+      - 6060:6060
+    networks:
+      - app_network
+    tty: true
