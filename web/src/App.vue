@@ -5,7 +5,11 @@ import SchedulePage from './components/SchedulePage.vue'
 </script>
 
 <template>
-  <!-- <ProfilePage /> -->
-  <SchedulePage />
-  <!-- <AuthPage /> -->
+  <router-view />
 </template>
+
+<script>
+export default {
+  name: 'App'
+};
+</script>
