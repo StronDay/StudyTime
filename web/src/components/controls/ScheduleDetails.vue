@@ -1,47 +1,90 @@
+<script setup>
+defineProps(['details'])
+defineEmits(['close-details'])
+</script>
+
 <template>
-  <div class="schedule-details" v-if="details">
-    <h3>{{ details.title }}</h3>
-    <p><strong>Время:</strong> {{ details.startTime }} - {{ details.endTime }}</p>
-    <p><strong>Преподаватель:</strong> {{ details.teacher }}</p>
-    <p><strong>Аудитория:</strong> {{ details.room }}</p>
-    <PerfectButton @click="closeDetails">Закрыть</PerfectButton>
+  <div class="details-overlay">
+    <div class="details-content">
+      <div class="header">
+        <h3>{{ details.subject }}</h3>
+        <button @click="$emit('close-details')" class="close-btn">
+          <i class='bx bx-x'></i>
+        </button>
+      </div>
+      
+      <div class="detail-item">
+        <label>Время:</label>
+        <span>{{ details.time }}</span>
+      </div>
+      
+      <div class="detail-item">
+        <label>Преподаватель:</label>
+        <span>{{ details.teacher }}</span>
+      </div>
+      
+      <div class="detail-item">
+        <label>Аудитория:</label>
+        <span>{{ details.classroom }}</span>
+      </div>
+      
+      <div v-if="details.additionalInfo" class="additional-info">
+        <label>Дополнительная информация:</label>
+        <p>{{ details.additionalInfo }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
-import PerfectButton from './PerfectButton.vue';
-
-export default {
-  name: 'ScheduleDetails',
-  components: {
-    PerfectButton
-  },
-  props: {
-    details: {
-      type: Object,
-      required: false
-    }
-  },
-  methods: {
-    closeDetails() {
-      this.$emit('close-details');
-    }
-  }
-};
-</script>
-
 <style scoped>
-.schedule-details {
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px; /* Скругление обводки */
-  margin-top: 20px;
-  background-color: #fff;
+.details-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-button {
-  margin-top: 10px;
-  padding: 5px 10px;
+.details-content {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
   cursor: pointer;
+  padding: 5px;
+}
+
+.detail-item {
+  margin: 10px 0;
+}
+
+.detail-item label {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.additional-info {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
 }
 </style>

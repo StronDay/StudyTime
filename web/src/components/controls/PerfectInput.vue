@@ -1,8 +1,15 @@
+<!-- PerfectInput.vue -->
 <template>
   <div class="input-group">
     <label :for="id">{{ label }}</label>
     <div class="input-wrapper">
-      <input :id="id" :type="type" :placeholder="placeholder" v-model="inputValue" @input="updateValue" />
+      <input
+        :id="id"
+        :type="type"
+        :placeholder="placeholder"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+      />
       <span class="input-icon">
         <slot name="icon"></slot>
       </span>
@@ -12,7 +19,7 @@
 
 <script>
 export default {
-  name: 'CustomInput',
+  name: 'PerfectInput',
   props: {
     id: {
       type: String,
@@ -26,23 +33,13 @@ export default {
       type: String,
       default: 'text'
     },
-    value: {
+    modelValue: {  // Изменили value на modelValue
       type: String,
       default: ''
     },
     placeholder: {
       type: String,
       default: ''
-    }
-  },
-  data() {
-    return {
-      inputValue: this.value
-    };
-  },
-  methods: {
-    updateValue() {
-      this.$emit('input', this.inputValue);
     }
   }
 };

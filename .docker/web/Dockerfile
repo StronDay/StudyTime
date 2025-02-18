@@ -17,6 +17,9 @@ COPY ./web/package*.json ./
 # Устанавливаем зависимости
 RUN npm install --verbose
 
+# Устанавливаем axios
+RUN npm install axios --save
+
 # Копируем остальные файлы
 COPY ./web .
 
