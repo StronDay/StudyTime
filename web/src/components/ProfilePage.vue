@@ -164,7 +164,7 @@ onMounted(() => {
 
           <DataView label="Статус" text="Студент">
             <template #icon>
-              <i class='bx bx-group'></i>
+              <i class='bx bxs-graduation'></i>
             </template>
           </DataView>
 
@@ -173,7 +173,7 @@ onMounted(() => {
             :text="profileData.group?.group || 'Не указана'"
           >
             <template #icon>
-              <i class='bx bx-phone'></i>
+              <i class='bx bx-group'></i>
             </template>
           </DataView>
 
@@ -182,7 +182,7 @@ onMounted(() => {
             :text="profileData.course?.course?.toString() || 'Не указан'"
           >
             <template #icon>
-              <i class='bx bx-map'></i>
+              <i class='bx bxs-book-bookmark'></i>
             </template>
           </DataView>
         </div>
