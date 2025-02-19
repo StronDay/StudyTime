@@ -20,6 +20,9 @@ RUN npm install --verbose
 # Устанавливаем axios
 RUN npm install axios --save
 
+# Устанавливаем "serve" — легкий HTTP-сервер
+RUN npm install -g serve
+
 # Копируем остальные файлы
 COPY ./web .
 
@@ -27,4 +30,4 @@ COPY ./web .
 EXPOSE 6060
 
 # Запускаем приложение
-CMD ["npm", "run", "dev", "--", "--port", "6060", "--host"]
+CMD ["serve", "-s", "dist", "-l", "6060"]
