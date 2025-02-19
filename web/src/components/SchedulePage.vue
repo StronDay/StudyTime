@@ -221,7 +221,7 @@ h2 {
 .custom-select {
   width: 200px;
   padding: 12px 20px;
-  border: 2px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   background: white;
   font-size: 16px;
@@ -244,7 +244,7 @@ h2 {
   margin-top: 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 0px;
 }
 
 /* Состояния загрузки и ошибки */

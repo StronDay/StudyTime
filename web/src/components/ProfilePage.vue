@@ -8,6 +8,7 @@ import DataView from './controls/DataView.vue'
 import UserProfile from './controls/UserProfile.vue'
 
 const router = useRouter()
+
 const profileData = ref({
   user: {
     username: '',
@@ -40,12 +41,19 @@ const processQueue = (error, token = null) => {
   failedQueue = []
 }
 
+// Функция выхода из профиля
+const logout = () => {
+  Cookies.remove('access_token')
+  Cookies.remove('refresh_token')
+  router.push('/auth')
+}
+
 // Перехватчик ответов
 api.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config
-    
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -56,37 +64,35 @@ api.interceptors.response.use(
           return Promise.reject(err)
         })
       }
-      
+
       originalRequest._retry = true
       isRefreshing = true
-      
+
       try {
         const refreshToken = Cookies.get('refresh_token')
         if (!refreshToken) throw new Error('No refresh token')
-        
+
         const { data } = await axios.post('http://0.0.0.0:5010/api/token/refresh/', {
           refresh: refreshToken
         })
-        
+
         Cookies.set('access_token', data.access)
         Cookies.set('refresh_token', data.refresh)
-        
+
         api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`
         originalRequest.headers['Authorization'] = `Bearer ${data.access}`
-        
+
         processQueue(null, data.access)
         return api(originalRequest)
       } catch (refreshError) {
-        Cookies.remove('access_token')
-        Cookies.remove('refresh_token')
-        router.push('/auth')
+        logout()
         processQueue(refreshError, null)
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false
       }
     }
-    
+
     return Promise.reject(error)
   }
 )
@@ -98,12 +104,12 @@ const fetchProfileData = async () => {
         Authorization: `Bearer ${Cookies.get('access_token')}`
       }
     })
-    
-    console.log('Ответ сервера:', response.data)
+
     profileData.value = response.data
   } catch (err) {
     if (err.response?.status === 401) {
       error.value = 'Требуется авторизация'
+      logout()
     } else {
       error.value = 'Ошибка загрузки данных профиля'
       console.error(err)
@@ -115,7 +121,7 @@ const fetchProfileData = async () => {
 
 onMounted(() => {
   if (!Cookies.get('access_token')) {
-    router.push('/login')
+    router.push('/auth')
     return
   }
   fetchProfileData()
@@ -127,7 +133,10 @@ onMounted(() => {
     <NavigationPanel class="navigation" />
 
     <div class="main-content">
-      <h2>Профиль</h2>
+      <div class="header">
+        <h2>Профиль</h2>
+        <button @click="logout" class="logout-button">Выйти</button>
+      </div>
 
       <div v-if="loading" class="loading">
         Загрузка данных...
@@ -202,6 +211,29 @@ onMounted(() => {
   margin-left: 40px;
 }
 
+/* Заголовок с кнопкой выхода */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Кнопка выхода */
+.logout-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #e74c3c;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
 /* Профиль пользователя */
 .user-profile {
   margin-top: 60px;
@@ -214,5 +246,12 @@ onMounted(() => {
   grid-template-columns: repeat(2, 1fr);
   column-gap: var(--column-gap, 20px); /* Настраиваемый горизонтальный отступ */
   row-gap: 40px; /* Отступ между плитками по вертикали */
+}
+
+/* Состояние загрузки и ошибки */
+.loading, .error {
+  margin-top: 40px;
+  font-size: 18px;
+  color: #555;
 }
 </style>
