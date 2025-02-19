@@ -6,20 +6,6 @@ networks:
 
 services:
 
-  mongo:
-    image: mongo:5.0
-    container_name: mongo_db
-    volumes:
-      - ./mongo_db:/data/db
-    ports:
-      - ${MONGO_PORT}:${MONGO_PORT}
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-    env_file:
-      - .env
-    networks:
-      - mongo_network
-
   app:
     container_name: app
     build:
